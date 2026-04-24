@@ -31,8 +31,8 @@ function Home() {
         );
 
         setExpenses(res.data.expenses);
-      } catch {
-        setError("Failed to load expenses");
+      } catch(err) {
+        setError(err.response?.data?.message || "Failed to load expenses");
       } finally {
         setLoading(false);
         setRefreshing(false);
