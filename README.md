@@ -15,7 +15,7 @@ It allows users to:
 # Live Demo
 
 Frontend: https://smart-budget-silk.vercel.app/  
-Backend API: [<Link>](https://smart-budget-32gk.onrender.com/health)
+Backend API: https://smart-budget-32gk.onrender.com/health
 
 ---
 
@@ -42,6 +42,7 @@ Backend API: [<Link>](https://smart-budget-32gk.onrender.com/health)
 
 # Project Structure
 
+```
 smart-budget/
 
 ├── frontend/
@@ -57,7 +58,7 @@ smart-budget/
 │   ├── routes/
 │   ├── models/
 │   └── middleware/
-
+```
 ---
 
 # Key Design Decisions
@@ -172,19 +173,6 @@ npm run dev
 cd backend  
 npm install  
 npm run dev
-
----
-
-# Environment Variables
-
-## Frontend
-
-VITE_API_URL=<backend-url>/api
-
-## Backend
-
-PORT=5000  
-MONGO_URI=<mongodb-connection-string>
 
 ---
 
