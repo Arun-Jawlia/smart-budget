@@ -1,30 +1,30 @@
-const Expense = require('../models/expense.model')
-const validateExpense = require('../utils/validateExpense')
+const Expense = require("../models/expense.model");
+const validateExpense = require("../utils/validateExpense");
 
 const createExpense = async (req, res, next) => {
   try {
-    const key = req.headers['idempotency-key']
+    const key = req.headers["idempotency-key"];
 
     if (!key) {
       return res.status(400).json({
-        message: 'Idempotency-Key header is required'
-      })
+        message: "Idempotency-Key header is required",
+      });
     }
 
-    const validationError = validateExpense(req.body)
+    const validationError = validateExpense(req.body);
 
     if (validationError) {
       return res.status(400).json({
-        message: validationError
-      })
+        message: validationError,
+      });
     }
 
     const existingExpense = await Expense.findOne({
-      idempotencyKey: key
-    })
+      idempotencyKey: key,
+    });
 
     if (existingExpense) {
-      return res.status(200).json(existingExpense)
+      return res.status(200).json(existingExpense);
     }
 
     const expense = await Expense.create({
@@ -32,47 +32,62 @@ const createExpense = async (req, res, next) => {
       category: req.body.category,
       description: req.body.description,
       date: req.body.date,
-      idempotencyKey: key
-    })
+      idempotencyKey: key,
+    });
 
-    res.status(201).json(expense)
-
+    res.status(201).json(expense);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 const getExpenses = async (req, res, next) => {
   try {
-    const { category, sort } = req.query
-
-    let filter = {}
+    const { category, sort, date } = req.query;
+    let filter = {};
 
     if (category) {
-      filter.category = category
+      filter.category = {
+        $regex: category,
+        $options: "i",
+      };
+    }
+    if (date) {
+      const start = new Date(date);
+      const end = new Date(date);
+      end.setDate(end.getDate() + 1);
+
+      filter.date = {
+        $gte: start,
+        $lt: end,
+      };
     }
 
-    let query = Expense.find(filter)
+    let sortOption = {};
 
-    if (sort === 'date_desc') {
-      query = query.sort({ date: -1 })
+    if (sort === "date_desc") {
+      sortOption.date = -1;
     }
 
-    const expenses = await query
+    if (sort === "date_asc") {
+      sortOption.date = 1;
+    }
 
-    const total = expenses.reduce((sum, item) => sum + item.amount, 0)
+    const expenses = await Expense.find(filter).sort(sortOption);
+
+    const total = expenses.reduce((sum, item) => {
+      return sum + item.amount;
+    }, 0);
 
     res.status(200).json({
       expenses,
-      total
-    })
-
+      total,
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-
+};
 module.exports = {
   createExpense,
-  getExpenses
-}
+  getExpenses,
+};
