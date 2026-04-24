@@ -8,5 +8,5 @@ export const createExpense = (data, key) =>
     }
   })
 
-export const getExpenses = (category = '') =>
-  API.get(`/expenses?category=${category}&sort=date_desc`)
+export const getExpenses = (category = '', sort, date = '') =>
+  API.get(`/expenses?category=${category}&sort=${sort}&date=${date}`)
