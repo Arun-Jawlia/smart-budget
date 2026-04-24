@@ -13,6 +13,9 @@ It allows users to:
 ---
 
 # Live Demo
+<p align="center">
+  <img src="frontend/assets/image.png" width="900" />
+</p>
 
 Frontend: https://smart-budget-silk.vercel.app/  
 Backend API: https://smart-budget-32gk.onrender.com/health
